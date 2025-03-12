@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # AI 3D Model Visualizer
 
 A high-performance 3D model viewer built with Three.js that provides a clean, clay-like visualization with edge detection and optimized shadows.
@@ -68,3 +69,6 @@ AI_3D_Visualizer/
 ## License
 
 MIT License - see LICENSE file for details 
+=======
+# AI_3D_Visualizer
+>>>>>>> b2e07cfb8702514f77f83a7ab0c906a18587a6ed
