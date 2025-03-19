@@ -4,6 +4,9 @@ import json
 import subprocess
 import threading
 import time
+import io
+from PIL import Image
+import numpy as np
 from flask import Flask, request, jsonify, send_from_directory, send_file
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -64,11 +67,44 @@ def retrieve_knowledge(query):
     except Exception as e:
         return f"Retrieval Error: {str(e)}"
 
+def validate_image(image_path):
+    """
+    Validates if the image contains potential building shapes by checking:
+    1. If the image is not empty/all white
+    2. If the image has sufficient edges/complexity
+    """
+    try:
+        # Open and convert image to grayscale
+        with Image.open(image_path) as img:
+            # Convert to grayscale
+            gray_img = img.convert('L')
+            # Convert to numpy array
+            img_array = np.array(gray_img)
+            
+            # Check if image is mostly empty (white/blank)
+            avg_pixel_value = np.mean(img_array)
+            if avg_pixel_value > 240:  # If average pixel value is very high (close to white)
+                return False, "The image appears to be empty or mostly blank."
+            
+            # Check for variation in pixel values (indicating presence of shapes/edges)
+            std_dev = np.std(img_array)
+            if std_dev < 20:  # If there's very little variation in pixel values
+                return False, "The image lacks sufficient detail or shapes."
+            
+            return True, "Image validation passed."
+    except Exception as e:
+        return False, f"Error validating image: {str(e)}"
+
 def analyze_image_with_retrieval(image_path, prompt):
     """ 
     Analyzes a building from 4 perspectives using GPT-4o and retrieves 
     architectural design insights from the Assistant knowledge base.
     """
+    
+    # First validate the image
+    is_valid, validation_message = validate_image(image_path)
+    if not is_valid:
+        return f"Unable to analyze: {validation_message} Please ensure the image contains clear views of the building structure."
     
     # Encode image for GPT-4o
     base64_image = encode_image(image_path)
@@ -90,7 +126,10 @@ def analyze_image_with_retrieval(image_path, prompt):
                     "You are an expert in sustainable architectural design, "
                     "analyzing buildings with technical knowledge. The image provided "
                     "shows a **single building with four different views**. "
-                    "Analyze the **architectural design elements, sustainability features, and functional performance** "
+                    "First, verify if the image shows clear building structures. "
+                    "If the image is empty, unclear, or doesn't show building structures, "
+                    "inform the user that you cannot provide analysis. "
+                    "Otherwise, analyze the **architectural design elements, sustainability features, and functional performance** "
                     "across all four views collectively. Also, integrate retrieved architectural insights into your response."
                 )},
                 {"role": "user", "content": [
