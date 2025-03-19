@@ -1,0 +1,198 @@
+# Blender 4.2.2 LTS MTL File: 'US-House.blend'
+# www.blender.org
+
+newmtl Aluminum
+Ns 490.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.302155 0.302155 0.302155
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+
+newmtl Brick058_1K
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns E:/Download/Miscellaneous/american-house/source/Textures/Bricks058_1K/Bricks058_1K_Roughness.jpg
+
+newmtl Bricks054_1K
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns E:/Download/Miscellaneous/american-house/source/Textures/Bricks054_1K/Bricks054_1K_Roughness.jpg
+
+newmtl Concrete023_1K
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd E:/Download/Miscellaneous/american-house/source/Textures/Concrete023_1K/Concrete023_1K_Color.jpg
+map_Ns E:/Download/Miscellaneous/american-house/source/Textures/Concrete023_1K/Concrete023_1K_Roughness.jpg
+map_Bump -bm 1.000000 E:/Download/Miscellaneous/american-house/source/Textures/Concrete023_1K/Concrete023_1K_NormalDX.jpg
+
+newmtl Doorknob_1k
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns E:/Download/Miscellaneous/american-house/source/Textures/Doorknob_1k/Doorknob_ROUGH_1k.jpg
+map_refl E:/Download/Miscellaneous/american-house/source/Textures/Doorknob_1k/Doorknob_METL_1k.jpg
+
+newmtl Fabric060_1K
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns E:/Download/Miscellaneous/american-house/source/Textures/Fabric060_1K/Fabric060_1K_Roughness.jpg
+
+newmtl Kitchen_Appliances_2k
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns E:/Download/Miscellaneous/american-house/source/Textures/Kitchen_Appliances_2k/Kitchen_Appliances_ROUGH_2k.jpg
+map_refl E:/Download/Miscellaneous/american-house/source/Textures/Kitchen_Appliances_2k/Kitchen_Appliances_METL_2k.jpg
+map_Ke E:/Download/Miscellaneous/american-house/source/Textures/Kitchen_Appliances_2k/Kitchen_Appliances_EMIS_2k.jpg
+
+newmtl Kitchen_Island_Cabinets_2k
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns E:/Download/Miscellaneous/american-house/source/Textures/Kitchen_Island_Cabinets_2k/Kitchen_Island_Cabinets_ROUGH_2k.jpg
+map_refl E:/Download/Miscellaneous/american-house/source/Textures/Kitchen_Island_Cabinets_2k/Kitchen_Island_Cabinets_METL_2k.jpg
+
+newmtl Kitchen_Panels
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns E:/Download/Miscellaneous/american-house/source/Textures/Kitchen_Panels_2k/Kitchen_Panels_ROUGH_2k.jpg
+map_Bump -bm 1.000000 E:/Download/Miscellaneous/american-house/source/Textures/Kitchen_Panels_2k/Kitchen_Panels_NRML_DX_2k.jpg
+
+newmtl Marble020_1K
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd E:/Download/Miscellaneous/american-house/source/Textures/Marble020_1K/Marble020_1K_Color.jpg
+map_Ns E:/Download/Miscellaneous/american-house/source/Textures/Marble020_1K/Marble020_1K_Roughness.jpg
+
+newmtl Metal027_1K
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd E:/Download/Miscellaneous/american-house/source/Textures/Metal027_1K/Metal027_1K_Color.jpg
+map_Ns E:/Download/Miscellaneous/american-house/source/Textures/Metal027_1K/Metal027_1K_Roughness.jpg
+map_refl E:/Download/Miscellaneous/american-house/source/Textures/Metal027_1K/Metal027_1K_Color.jpg
+
+newmtl PaintedPlaster017_2K_Ceiling
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.957965 1.000000 0.957965
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl PaintedPlaster017_2K_Walls
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.402763 0.420000 0.402763
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl RoofingTiles003_1K
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd E:/Download/Miscellaneous/american-house/source/Textures/RoofingTiles003_1K/RoofingTiles003_1K_Color.jpg
+map_Ns E:/Download/Miscellaneous/american-house/source/Textures/RoofingTiles003_1K/RoofingTiles003_1K_Roughness.jpg
+
+newmtl Window_Frame
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.018849 0.018849 0.018849
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Window_Glass
+Ns 360.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Wood042_2K
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd E:/Download/Miscellaneous/american-house/source/Textures/Wood042_2K/Wood042_2K_Color.jpg
+map_Ns E:/Download/Miscellaneous/american-house/source/Textures/Wood042_2K/Wood042_2K_Roughness.jpg
+
+newmtl Wood058_2K
+Ka 1.000000 1.000000 1.000000
+Kd 0.723044 0.723044 0.723044
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns E:/Download/Miscellaneous/american-house/source/Textures/Wood058_2k/Wood058_2K_Roughness_alt.jpg
+
+newmtl Wood062_2K
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Ns E:/Download/Miscellaneous/american-house/source/Textures/Wood062_2K/Wood062_2K_Roughness.jpg
