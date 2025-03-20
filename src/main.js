@@ -127,16 +127,111 @@ bounceLight.position.set(0, 0.5, 0);
 bounceLight.castShadow = false;
 scene.add(bounceLight);
 
-// Create a visible sun sphere
-const sunGeometry = new THREE.SphereGeometry(0.5, 16, 16);
-const sunMaterial = new THREE.MeshBasicMaterial({ 
-  color: 0xffff00, // Yellow color for the sun
-  emissive: 0xffff00,
-  emissiveIntensity: 1
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
+import { TextureLoader } from "three";
+
+// Load Sun Texture
+const textureLoader = new TextureLoader();
+const sunMaterial = new THREE.MeshBasicMaterial({
+    map: textureLoader.load('/models/sun/textures/suncyl1.jpg'),
+    emissive: 0xffff00,
+    emissiveIntensity: 1
 });
-const sunSphere = new THREE.Mesh(sunGeometry, sunMaterial);
-sunSphere.name = 'sunSphere'; // Name the sun sphere for easy access
-scene.add(sunSphere);
+
+// Declare sunSphere globally so it's accessible later
+let sunSphere = null;
+
+// Load the FBX model
+const fbxLoader = new FBXLoader();
+fbxLoader.load('/models/sun/source/UnstableStar.fbx', (fbx) => {
+    fbx.name = "sunSphere"; // Keep the same name
+
+    fbx.traverse((child) => {
+        if (child.isMesh) {
+            child.material = sunMaterial; // Apply the sun material
+            child.castShadow = false; // Disable shadow casting
+            child.receiveShadow = false; // Disable shadow receiving
+            child.scale.set(0.3, 0.3, 0.3); // Make the model much smaller
+        }
+    });
+
+    // Assign the FBX model to sunSphere
+    sunSphere = fbx;
+    scene.add(sunSphere);
+
+    console.log("✅ FBX Model Loaded as sunSphere");
+
+    // Now that sunSphere exists, safely update its position
+    if (sunLight) {
+        sunSphere.position.copy(sunLight.position);
+    }
+
+    // Ensure sun updates only after loading
+    updateSunPosition();
+}, 
+(xhr) => { console.log(`FBX Model Loading: ${(xhr.loaded / xhr.total) * 100}%`); },
+(error) => { console.error("❌ Error loading FBX:", error); });
+
+// Modify updateSunPosition() to handle both manual and real-time updates
+function updateSunPosition() {
+    if (!sunSphere) {
+        console.warn("⏳ sunSphere not loaded yet. Skipping position update.");
+        return; // Don't execute if sunSphere isn't ready
+    }
+
+    // If using real position, calculate it based on date and time
+    if (dateTimeParams.useRealPosition) {
+        const sunPos = calculateSunPosition(
+            dateTimeParams.date,
+            dateTimeParams.time,
+            dateTimeParams.latitude,
+            dateTimeParams.longitude,
+            dateTimeParams.timezone
+        );
+        
+        // Update the manual controls to match the calculated position
+        sunParams.elevation = Math.max(0, sunPos.elevation); // Clamp to >= 0 to keep sun above horizon
+        sunParams.azimuth = sunPos.azimuth;
+        
+        // Update the GUI controllers
+        for (const controller of sunFolder.controllers) {
+            controller.updateDisplay();
+        }
+    }
+
+    // Convert to radians
+    const elevationRad = THREE.MathUtils.degToRad(sunParams.elevation);
+    const azimuthRad = THREE.MathUtils.degToRad(sunParams.azimuth);
+    
+    // Calculate position on the celestial sphere
+    const radius = 10; // Distance from scene center
+    const x = radius * Math.sin(azimuthRad) * Math.cos(elevationRad);
+    const y = radius * Math.sin(elevationRad);
+    const z = radius * Math.cos(azimuthRad) * Math.cos(elevationRad);
+    
+    // Update sun light position
+    sunLight.position.set(x, y, z);
+    sunLight.intensity = sunParams.intensity * 1.5; // Increased intensity for more dramatic shadows
+    sunLight.color.set(sunParams.color);
+    
+    // Update sun sphere position and size
+    sunSphere.position.copy(sunLight.position);
+    sunSphere.scale.setScalar(sunParams.size * 0.1); // Maintain small scale while allowing size adjustment
+    
+    // Update helper (if ever needed)
+    if (sunHelper.visible) {
+        sunHelper.update();
+    }
+    
+    // Update bounce light position to be opposite to the sun
+    bounceLight.position.set(-x * 0.2, 0.5, -z * 0.2);
+    // Adjust bounce light color to complement sun color
+    bounceLight.color.set(sunParams.color);
+    bounceLight.intensity = 0.02 + (90 - sunParams.elevation) / 90 * 0.08; // Reduced for higher contrast
+    
+    // Adjust hemisphere light intensity based on sun elevation
+    hemiLight.intensity = 0.03 + sunParams.elevation / 90 * 0.07; // Reduced for higher contrast
+}
 
 // Sun helper to visualize direction (will not be shown by default)
 const sunHelper = new THREE.DirectionalLightHelper(sunLight, 2);
@@ -239,62 +334,6 @@ function calculateSunPosition(date, time, latitude, longitude, timezone) {
     elevation: alt,
     azimuth: azm
   };
-}
-
-// Function to update sun position based on elevation and azimuth
-function updateSunPosition() {
-  // If using real position, calculate it based on date and time
-  if (dateTimeParams.useRealPosition) {
-    const sunPos = calculateSunPosition(
-      dateTimeParams.date,
-      dateTimeParams.time,
-      dateTimeParams.latitude,
-      dateTimeParams.longitude,
-      dateTimeParams.timezone
-    );
-    
-    // Update the manual controls to match the calculated position
-    sunParams.elevation = Math.max(0, sunPos.elevation); // Clamp to >= 0 to keep sun above horizon
-    sunParams.azimuth = sunPos.azimuth;
-    
-    // Update the GUI controllers
-    for (const controller of sunFolder.controllers) {
-      controller.updateDisplay();
-    }
-  }
-  
-  // Convert to radians
-  const elevationRad = THREE.MathUtils.degToRad(sunParams.elevation);
-  const azimuthRad = THREE.MathUtils.degToRad(sunParams.azimuth);
-  
-  // Calculate position on the celestial sphere
-  const radius = 10; // Distance from scene center
-  const x = radius * Math.sin(azimuthRad) * Math.cos(elevationRad);
-  const y = radius * Math.sin(elevationRad);
-  const z = radius * Math.cos(azimuthRad) * Math.cos(elevationRad);
-  
-  // Update sun light position
-  sunLight.position.set(x, y, z);
-  sunLight.intensity = sunParams.intensity * 1.5; // Increased intensity for more dramatic shadows
-  sunLight.color.set(sunParams.color);
-  
-  // Update sun sphere position and size
-  sunSphere.position.copy(sunLight.position);
-  sunSphere.scale.setScalar(sunParams.size);
-  
-  // Update helper (if ever needed)
-  if (sunHelper.visible) {
-    sunHelper.update();
-  }
-  
-  // Update bounce light position to be opposite to the sun
-  bounceLight.position.set(-x * 0.2, 0.5, -z * 0.2);
-  // Adjust bounce light color to complement sun color
-  bounceLight.color.set(sunParams.color);
-  bounceLight.intensity = 0.02 + (90 - sunParams.elevation) / 90 * 0.08; // Reduced for higher contrast
-  
-  // Adjust hemisphere light intensity based on sun elevation
-  hemiLight.intensity = 0.03 + sunParams.elevation / 90 * 0.07; // Reduced for higher contrast
 }
 
 // Initialize sun position
@@ -539,7 +578,7 @@ uploadButton.accept = '.obj,.mtl,.gltf,.glb,.bin,.jpg,.png,.jpeg'; // Accept all
 uploadButton.setAttribute('multiple', 'true'); // Allow multiple files
 uploadButton.style.position = 'fixed';
 uploadButton.style.left = '50%';
-uploadButton.style.bottom = '10%';
+uploadButton.style.bottom = '12%';
 uploadButton.style.transform = 'translateX(-50%)';
 uploadButton.style.zIndex = '1000';
 uploadButton.style.cursor = 'pointer';
@@ -560,7 +599,7 @@ document.body.appendChild(uploadButton);
 const helperText = document.createElement('div');
 helperText.style.position = 'fixed';
 helperText.style.left = '50%';
-helperText.style.bottom = '5%';
+helperText.style.bottom = '7%';
 helperText.style.transform = 'translateX(-50%)';
 helperText.style.color = 'white';
 helperText.style.fontSize = '12px';
@@ -1234,7 +1273,7 @@ function createChatbotUI() {
   chatbotIcon.style.width = '80px'; // Increase size for circle
   chatbotIcon.style.height = '80px';
   chatbotIcon.style.position = 'fixed';
-  chatbotIcon.style.left = '50%';
+  chatbotIcon.style.left = 'calc(50% - 80px)'; // Adjusted for spacing
   chatbotIcon.style.bottom = '30%';
   chatbotIcon.style.transform = 'translateX(-50%)';
   chatbotIcon.style.cursor = 'pointer';
@@ -1258,7 +1297,7 @@ function createChatbotUI() {
   cameraIcon.style.width = '80px'; // Increase size for circle
   cameraIcon.style.height = '80px';
   cameraIcon.style.position = 'fixed';
-  cameraIcon.style.left = 'calc(50% + 110px)'; // Position to the right of chatbot icon
+  cameraIcon.style.left = 'calc(50% + 80px)'; // Adjusted for spacing
   cameraIcon.style.bottom = '30%';
   cameraIcon.style.transform = 'translateX(-50%)';
   cameraIcon.style.cursor = 'pointer';
@@ -1357,7 +1396,7 @@ function createChatbotUI() {
     
     .chatbox-header {
       padding: 15px;
-      background-color: #3f51b5;
+      background-color:rgb(53, 148, 148);
       color: white;
       display: flex;
       justify-content: space-between;
@@ -1441,13 +1480,16 @@ function createChatbotUI() {
     }
     
     .user-message {
-      background-color: #e1e6ff;
+      background-color:rgb(156, 218, 218);
+      box-shadow: -3px 3px 10px rgba(0, 0, 0, 0.33); /* Adds a shadow on the opposite side */
       margin-left: auto;
       border-bottom-right-radius: 5px;
     }
     
     .bot-message {
       background-color: #f1f1f1;
+      box-shadow: -3px 3px 10px rgba(0, 0, 0, 0.33); /* Adds a shadow on the opposite side */
+
       margin-right: auto;
       border-bottom-left-radius: 5px;
     }
@@ -1496,7 +1538,7 @@ function createChatbotUI() {
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background-color: #3f51b5;
+      background-color:rgb(53, 148, 148);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1507,7 +1549,7 @@ function createChatbotUI() {
     }
     
     .chatbox-send:hover {
-      background-color: #303f9f;
+      background-color:rgb(30, 99, 99);
     }
     
     .capture-notification {
@@ -2060,7 +2102,8 @@ toggleSunButton.style.zIndex = '1000';
 toggleSunButton.style.padding = '10px';
 toggleSunButton.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
 toggleSunButton.style.border = 'none';
-toggleSunButton.style.borderRadius = '5px';
+toggleSunButton.style.borderRadius = '20px';
+toggleSunButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
 toggleSunButton.style.cursor = 'pointer';
 document.body.appendChild(toggleSunButton);
 
